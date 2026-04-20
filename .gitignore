@@ -1,0 +1,9 @@
+node_modules
+.next
+.env
+.env.local
+db/*.sqlite
+db/*.sqlite-*
+db/backups
+*.log
+.DS_Store

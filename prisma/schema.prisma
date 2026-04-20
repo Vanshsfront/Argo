@@ -1,0 +1,182 @@
+// Argo Growth Dashboard — Postgres schema on Supabase, accessed via Prisma.
+// Profile.id mirrors auth.users.id (UUID) from Supabase Auth.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  admin
+  team
+  viewer
+}
+
+model Profile {
+  id                String   @id @db.Uuid
+  email             String   @unique
+  name              String
+  role              Role     @default(team)
+  assignedClientIds Int[]    @default([]) @map("assigned_client_ids")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  contentItems ContentItem[]
+
+  @@map("profiles")
+}
+
+model Client {
+  id              Int       @id @default(autoincrement())
+  fullName        String    @map("full_name")
+  businessName    String?   @map("business_name")
+  niche           String?
+  targetAudience  String?   @map("target_audience")
+  platforms       String[]  @default([])
+  contentPillars  String[]  @default([]) @map("content_pillars")
+  tone            String?
+  goals           String?
+  avoid           String?
+  startDate       DateTime? @map("start_date") @db.Date
+  endDate         DateTime? @map("end_date") @db.Date
+  retainerAmount  Float     @default(0) @map("retainer_amount")
+  notes           String?
+  archived        Boolean   @default(false)
+  status          String    @default("green")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  tasks           Task[]
+  prospects       Prospect[]
+  contentItems    ContentItem[]
+  resources       Resource[]
+  invoices        Invoice[]
+
+  @@map("clients")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  title       String
+  dueDate     DateTime? @map("due_date") @db.Date
+  tag         String?
+  clientId    Int?      @map("client_id")
+  completed   Boolean   @default(false)
+  completedAt DateTime? @map("completed_at")
+  sortOrder   Int       @default(0) @map("sort_order")
+  source      String    @default("manual")
+  sourceRef   String?   @map("source_ref")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  client      Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([source, sourceRef])
+  @@map("tasks")
+}
+
+model Prospect {
+  id                 Int       @id @default(autoincrement())
+  fullName           String    @map("full_name")
+  platform           String?
+  niche              String?
+  dealValue          Float     @default(0) @map("deal_value")
+  stage              String    @default("Identified")
+  stageEnteredAt     DateTime  @default(now()) @map("stage_entered_at")
+  dateAdded          DateTime  @default(now()) @map("date_added")
+  nextFollowUp       DateTime? @map("next_follow_up") @db.Date
+  nextAction         String?   @map("next_action")
+  leadSource         String?   @map("lead_source")
+  convertedClientId  Int?      @map("converted_client_id")
+  sortOrder          Int       @default(0) @map("sort_order")
+
+  convertedClient    Client?        @relation(fields: [convertedClientId], references: [id], onDelete: SetNull)
+  notes              ProspectNote[]
+
+  @@map("prospects")
+}
+
+model ProspectNote {
+  id         Int      @id @default(autoincrement())
+  prospectId Int      @map("prospect_id")
+  body       String
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  prospect   Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+
+  @@index([prospectId])
+  @@map("prospect_notes")
+}
+
+model ContentItem {
+  id              Int       @id @default(autoincrement())
+  clientId        Int       @map("client_id")
+  title           String
+  platform        String?
+  format          String?
+  status          String    @default("Briefed")
+  scheduledDate   DateTime? @map("scheduled_date") @db.Date
+  script          String?
+  notes           String?
+  postLink        String?   @map("post_link")
+  perfViews       Int?      @map("perf_views")
+  perfLikes       Int?      @map("perf_likes")
+  perfComments    Int?      @map("perf_comments")
+  perfSaves       Int?      @map("perf_saves")
+  assigneeId      String?   @map("assignee_id") @db.Uuid
+  dueDate         DateTime? @map("due_date") @db.Date
+  inProduction    Boolean   @default(true) @map("in_production")
+  productionStage String    @default("Brief") @map("production_stage")
+  sortOrder       Int       @default(0) @map("sort_order")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  client          Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  assignee        Profile?  @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+
+  @@index([clientId])
+  @@index([assigneeId])
+  @@map("content_items")
+}
+
+model Resource {
+  id          Int      @id @default(autoincrement())
+  clientId    Int      @map("client_id")
+  title       String
+  type        String?
+  url         String?
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@map("resources")
+}
+
+model Invoice {
+  id             Int       @id @default(autoincrement())
+  clientId       Int       @map("client_id")
+  amount         Float     @default(0)
+  issueDate      DateTime? @map("issue_date") @db.Date
+  dueDate        DateTime? @map("due_date") @db.Date
+  status         String    @default("Draft")
+  paymentMethod  String?   @map("payment_method")
+  notes          String?
+  paidAt         DateTime? @map("paid_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  client         Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@map("invoices")
+}
+
+model Setting {
+  key   String @id
+  value String?
+
+  @@map("settings")
+}

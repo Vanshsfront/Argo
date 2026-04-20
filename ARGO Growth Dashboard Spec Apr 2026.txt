@@ -1,0 +1,133 @@
+﻿ARGO GROWTH — CUSTOM DASHBOARD SPECIFICATION For Goated Software — April 2026
+________________
+
+
+OVERVIEW
+Build a custom web-based operations dashboard for Argo Growth, a personal branding agency. The dashboard is the single operating system for the entire business. It must work on both desktop and mobile. It will be used by the founder (admin) and up to 2 team members. Keep the architecture simple — 5 clearly separated pillars accessible from a persistent left sidebar or bottom nav on mobile.
+________________
+
+
+PILLAR 1: CEO DASHBOARD
+This is the home screen. The first thing that loads when the founder opens the dashboard. It is a personal command center — not a client-facing view.
+What it must show:
+Top strip with 4 live numbers: Active Clients (count), MRR (sum of all active retainers), Open Deals (count of prospects not yet closed), and Tasks Due Today (count pulled from the to-do list).
+Below that, a To-Do List. This is the core of the CEO dashboard. It must be a simple, fast task manager. Each task has a title, optional due date, optional tag (which client or which pillar it belongs to — e.g. "Krish", "Sales", "Admin"), and a checkbox to mark complete. Tasks can be added quickly with a single input field. Completed tasks collapse or move to a "Done" section. Tasks tagged to a specific client should also appear in that client's workspace. The founder should be able to reorder tasks manually by drag-and-drop. There should be a "Today" filter and an "All" view.
+Below the to-do list, a simple Pipeline Snapshot — a single row showing how many prospects are sitting in each stage (e.g. Identified: 3 | Called: 2 | Proposal Sent: 1). Clicking a stage opens the CRM pillar filtered to that stage.
+Below that, a Client Health Strip — one card per active client showing their name, what week of the engagement they are on (e.g. Week 4 of 12), and a simple status dot: green (on track), yellow (needs attention), red (at risk). Clicking a card opens that client's workspace.
+That is all. The CEO dashboard should not be cluttered. Fast, clean, functional.
+________________
+
+
+PILLAR 2: CLIENT WORKSPACE
+Every client gets their own dedicated workspace. All client workspaces are listed in the sidebar under a "Clients" section. Clicking a client name opens their workspace. New client workspaces are created by the admin when a deal is closed.
+Each client workspace has three sections accessible via tabs at the top of their page:
+Tab 1 — About
+This is a structured profile for the client. It is filled in by the founder during onboarding and updated as the engagement progresses. Fields:
+* Full name and business name
+* Niche / industry
+* Target audience (who their content is for)
+* Current platforms (Instagram, LinkedIn, X, YouTube — checkboxes)
+* Content pillars (3–5 core topics their content will revolve around — text fields)
+* Tone of voice (e.g. "Direct, ambitious, no fluff" — free text)
+* Goals for the 90-day engagement (free text)
+* What to avoid (topics, styles, formats they don't want — free text)
+* Engagement start date and end date (auto-calculates current week number, e.g. Week 6 of 12)
+* Monthly retainer amount
+* Notes (open free-text field for anything else)
+All fields are editable inline. No save button needed — auto-save on change.
+Tab 2 — Content Calendar
+A visual monthly calendar showing all content planned and posted for this client. Each content item on the calendar is a card that contains: title / working title, platform (IG / LinkedIn / X / YouTube Shorts), format (short video / carousel / thread / long-form / story), status (Briefed / Scripted / Approved / Scheduled / Posted), and scheduled date.
+Clicking a card opens a detail view with: the full script or brief (text editor), notes, and after posting — a field to paste the post link and log performance (views, likes, comments, saves).
+Content items can be added by clicking any date on the calendar. There should also be a List View toggle — same data shown as a sortable table instead of a calendar grid. Filter by status and platform.
+This calendar is internal — the client does not have a login. It is managed entirely by the Argo Growth team.
+Tab 3 — Resources
+A simple library of resources for this client. The founder drops links, files, and Loom recordings here that are relevant to this client's engagement. Each resource has: a title, a type tag (Loom / Guide / SOP / Template / Other), a URL or file upload, and an optional description. Resources are displayed as a clean list or card grid. The founder can add, edit, and delete resources. No client login required — this is an internal reference library for the team when working on that client.
+________________
+
+
+PILLAR 3: CRM / SALES
+A prospect tracker that maps every potential client from first contact to signed or dead.
+Pipeline View (Kanban)
+Seven stages shown as columns with cards that can be dragged between them:
+1. Identified — prospect spotted, added to the system
+2. Contacted — outreach sent
+3. Responded — they replied positively
+4. Discovery Call — call booked or completed
+5. Proposal Sent — offer sent
+6. Negotiating — active back and forth
+7. Closed Won — signed (triggers creation of a new Client Workspace)
+8. Closed Lost — dead deal
+Each prospect card shows: name, deal value (monthly retainer they'd pay), and days in current stage.
+Prospect Record (clicking a card opens this)
+* Full name
+* Platform / where they were found (Instagram / LinkedIn / Referral / Inbound DM)
+* Their niche
+* Estimated deal value (monthly retainer)
+* Current stage
+* Date added
+* Next follow-up action and due date
+* Notes log — a running chronological log of all interactions. Each note has a date and free text. New notes are added at the top.
+* Lead source — how they found Argo or how Argo found them
+List View toggle — same data as a sortable table. Filter by stage, source, deal value.
+Follow-up system — each prospect can have a follow-up date set. Prospects with overdue follow-ups surface in the CEO Dashboard to-do strip automatically as a tagged task.
+When a prospect is moved to Closed Won, the system prompts: "Create client workspace for [name]?" — clicking yes pre-fills the About tab with name, niche, and deal value already captured.
+________________
+
+
+PILLAR 4: FINANCIALS
+Simple, not a full accounting tool. Just enough to know the revenue picture at all times.
+Top of page — 4 numbers:
+* MRR (sum of all active retainer amounts)
+* Collected this month (sum of invoices marked paid this month)
+* Outstanding (sum of invoices sent but not yet paid)
+* Overdue (sum of invoices past their due date)
+Invoice Tracker — a table with one row per invoice:
+Columns: Client name, Invoice amount, Issue date, Due date, Status (Draft / Sent / Paid / Overdue), Payment method, Notes.
+Status can be updated by clicking it — a simple dropdown. Overdue invoices are highlighted in red automatically when today's date passes the due date and status is not Paid.
+New invoices are added manually by the admin. No invoice generation needed in V1 — just tracking.
+Per-client revenue summary — below the table, a collapsed section per client showing: total contract value, total collected to date, and remaining balance.
+Revenue chart — a simple bar chart showing total revenue collected per month, starting from the first invoice. Builds over time automatically.
+________________
+
+
+PILLAR 5: CONTENT PRODUCTION (Internal)
+This is the internal content production pipeline — separate from the client-facing content calendar in each client workspace. This is where the team manages the actual production process across all clients at once.
+Kanban Pipeline — 5 stages:
+1. Brief — idea logged, not yet written
+2. Scripting — script being written
+3. Review — script sent for internal or client review
+4. Approved — greenlit, ready to produce or record
+5. Posted — live
+Each card contains: title, client name (color-coded per client), platform, format, assignee (founder or team member), due date, and current stage.
+Clicking a card opens: the full brief or script (text editor), comments/notes field, and after posting — post link and performance stats (views, likes, comments, saves).
+List View toggle — same data as a sortable table. Filter by client, assignee, status, platform, due date.
+Velocity bar — at the top of this pillar, a simple progress indicator: scripts completed this week vs the weekly target the founder sets. E.g. "6 / 10 scripts done this week." Resets every Monday.
+When a card is moved to Posted, the system prompts: "Log performance for [client]?" — clicking yes opens a quick form to enter views, likes, comments, saves, which gets recorded in that client's content performance log inside their workspace.
+________________
+
+
+USERS & ROLES
+Three permission levels:
+Admin (founder) — full access to everything. Can create and archive clients, edit financials, manage users.
+Team Member — access to Content Production (full) and Client Workspaces (can view and edit content calendar and resources, cannot edit About tab or financials).
+Viewer — read-only access to specific client workspaces assigned to them. Cannot edit anything.
+________________
+
+
+TECHNICAL REQUIREMENTS
+Web application, accessible via browser. Must be fully responsive and functional on mobile — not just readable, actually usable on a phone screen. Progressive Web App (PWA) preferred so it can be saved to the home screen on mobile.
+No full-page reloads between pillars — single page application feel.
+All data stored in a database owned and controlled by Aamish. No third-party SaaS dependency that could change pricing or shut down.
+Any table in the system must be exportable as a CSV.
+Automated daily data backup.
+Full source code delivered via GitHub repository with Aamish as owner. All hosting credentials, domain access, and server details documented and transferred. A 30-minute handoff walkthrough call is required on delivery. A README with instructions for making edits, adding users, and exporting data must be included. The dashboard must be fully operable without Goated Software's ongoing involvement after handoff.
+________________
+
+
+DELIVERY PRIORITY ORDER
+If scope needs to be cut or phased, build in this order:
+1. CEO Dashboard
+2. Client Workspace (all three tabs)
+3. CRM / Sales
+4. Content Production
+5. Financials
